@@ -21,7 +21,7 @@ dependencies {
     implementation project(':k9mail-library')
     implementation project(':plugins:HoloColorPicker')
     implementation project(':plugins:openpgp-api-lib:openpgp-api')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.71"
     implementation "com.squareup.okio:okio:${okioVersion}"
     implementation 'commons-io:commons-io:2.4'
     implementation "com.android.support:support-v4:${androidSupportLibraryVersion}"
@@ -35,7 +35,7 @@ dependencies {
     implementation "com.jakewharton.timber:timber:${timberVersion}"
     implementation 'net.jcip:jcip-annotations:1.0'
     implementation 'org.apache.james:apache-mime4j-core:0.8.1'
-
+    implementation 'com.google.code.gson:gson:2.8.6'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
 
     testImplementation "org.robolectric:robolectric:${robolectricVersion}"
@@ -57,7 +57,7 @@ android {
         versionName '5.600'
 
         minSdkVersion 15
-        targetSdkVersion 22
+        targetSdkVersion 29
 
         generatedDensities = ['mdpi', 'hdpi', 'xhdpi']
 

@@ -1,6 +1,12 @@
 package com.fsck.k9.activity;
 
 
+import android.os.Parcel;
+import android.util.Log;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
@@ -325,8 +331,10 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
         }
 
         if (savedInstanceState != null) {
-            DisplayMode savedDisplayMode =
-                    (DisplayMode) savedInstanceState.getSerializable(STATE_DISPLAY_MODE);
+            Gson gson = new Gson();
+            DisplayMode savedDisplayMode = gson.fromJson(savedInstanceState.getString(STATE_DISPLAY_MODE),MessageList.DisplayMode.class);
+//            DisplayMode savedDisplayMode =
+//                    (DisplayMode) savedInstanceState.getSerializable(STATE_DISPLAY_MODE);
             if (savedDisplayMode != DisplayMode.SPLIT_VIEW) {
                 displayMode = savedDisplayMode;
                 return;
@@ -520,18 +528,57 @@ public class MessageList extends K9Activity implements MessageListFragmentListen
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        String SAVE_RESTORE_TAG ="SAVERESTORE";
+        long start = Calendar.getInstance().getTimeInMillis();
+        Gson gson = new Gson();
+// Serialization
+        outState.putString(STATE_DISPLAY_MODE,gson.toJson(displayMode));
+        outState.putString(STATE_MESSAGE_LIST_WAS_DISPLAYED,gson.toJson(messageListWasDisplayed));
+        outState.putString(STATE_FIRST_BACK_STACK_ID,gson.toJson(firstBackStackId));
+        //outState.putString("account",gson.toJson(account));
+        outState.putString("folderName",gson.toJson(folderName));
+        outState.putString("search",gson.toJson(search));
+        outState.putString("singleFolderMode",gson.toJson(singleFolderMode));
+        outState.putString("singleAccountMode",gson.toJson(singleAccountMode));
+        outState.putString("lastDirection",gson.toJson(lastDirection));
+        outState.putString("noThreading",gson.toJson(noThreading));
+        outState.putString("messageReference",gson.toJson(messageReference));
+        outState.putString("messageListWasDisplayed",gson.toJson(messageListWasDisplayed));
 
-        outState.putSerializable(STATE_DISPLAY_MODE, displayMode);
-        outState.putBoolean(STATE_MESSAGE_LIST_WAS_DISPLAYED, messageListWasDisplayed);
-        outState.putInt(STATE_FIRST_BACK_STACK_ID, firstBackStackId);
+        long end = Calendar.getInstance().getTimeInMillis();
+        Log.i(SAVE_RESTORE_TAG, "Save: " + getBundleSizeInBytes(outState) + ":" + (end - start));
+
+    }
+    int getBundleSizeInBytes(Bundle bundle) {
+        Parcel parcel = Parcel.obtain();
+        int size;
+        parcel.writeBundle(bundle);
+        size = parcel.dataSize();
+        parcel.recycle();
+
+        return size;
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
-        messageListWasDisplayed = savedInstanceState.getBoolean(STATE_MESSAGE_LIST_WAS_DISPLAYED);
-        firstBackStackId = savedInstanceState.getInt(STATE_FIRST_BACK_STACK_ID);
+        String SAVE_RESTORE_TAG ="SAVERESTORE";
+        long start = Calendar.getInstance().getTimeInMillis();
+        Gson gson = new Gson();
+        displayMode = gson.fromJson(savedInstanceState.getString(STATE_DISPLAY_MODE),MessageList.DisplayMode.class);
+        messageListWasDisplayed = gson.fromJson(savedInstanceState.getString(STATE_MESSAGE_LIST_WAS_DISPLAYED),Boolean.class);
+        firstBackStackId = gson.fromJson(savedInstanceState.getString(STATE_FIRST_BACK_STACK_ID),int.class);
+        //account = gson.fromJson(savedInstanceState.getString("account"),Account.class);
+        folderName = gson.fromJson(savedInstanceState.getString("folderName"),String.class);
+        search = gson.fromJson(savedInstanceState.getString("search"),LocalSearch.class);
+        singleFolderMode = gson.fromJson(savedInstanceState.getString("singleFolderMode"),boolean.class);
+        singleAccountMode = gson.fromJson(savedInstanceState.getString("singleAccountMode"),boolean.class);
+        lastDirection = gson.fromJson(savedInstanceState.getString("lastDirection"),int.class);
+        noThreading = gson.fromJson(savedInstanceState.getString("noThreading"),boolean.class);
+        messageReference = gson.fromJson(savedInstanceState.getString("messageReference"),MessageReference.class);
+        messageListWasDisplayed = gson.fromJson(savedInstanceState.getString("messageListWasDisplayed"),boolean.class);
+        long end = Calendar.getInstance().getTimeInMillis();
+        Log.i(SAVE_RESTORE_TAG, "Restore: " + getBundleSizeInBytes(savedInstanceState) + ":" + (end - start));
     }
 
     private void initializeActionBar() {

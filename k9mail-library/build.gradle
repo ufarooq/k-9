@@ -23,7 +23,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:0.4.1'
     androidTestImplementation 'com.madgag.spongycastle:pg:1.51.0.0'
 
-    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}"
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.71"
     testImplementation "org.robolectric:robolectric:${robolectricVersion}"
     testImplementation "junit:junit:${junitVersion}"
     testImplementation "com.google.truth:truth:${truthVersion}"
